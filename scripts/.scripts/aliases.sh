@@ -1,5 +1,6 @@
 #! /bin/bash
 
+alias tmuxnew=tmux new -A -s vinicius 
 
 # cd to projects folder with fuzzy finder
 alias od='cd $(find ~/Documentos/www -maxdepth 1 -type d | fzf)'
