@@ -2,10 +2,10 @@
 
 
 # cd to projects folder with fuzzy finder
-alias od='cd $(find ~/www -maxdepth 1 -type d | fzf)'
+alias od='cd $(find ~/Documentos/www -maxdepth 1 -type d | fzf)'
 
 # nvim open project aliases
-alias nd='nvim $(find ~/www -maxdepth 1 -type d | fzf)'
+alias nd='nvim $(find ~/Documentos/www -maxdepth 1 -type d | fzf)'
 alias n=nvim
 
 # work developments
