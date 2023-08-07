@@ -26,9 +26,9 @@ vim.keymap.set('n', '<leader>/', function()
 end, { desc = '[/] Fuzzily search in current buffer' })
 
 vim.keymap.set('n', '<leader>gf', function ()
-  require('telescope.builtin').git_files({
+  require('telescope.builtin').git_status({
     layout_config = {
-      preview_width = 0.65,
+      preview_width = 0.5,
     }
   })
 end, { desc = 'Search [G]it [F]iles' })
