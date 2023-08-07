@@ -25,16 +25,28 @@ vim.keymap.set('n', '<leader>/', function()
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
 
-vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
+vim.keymap.set('n', '<leader>gf', function ()
+  require('telescope.builtin').git_files({
+    layout_config = {
+      preview_width = 0.65,
+    }
+  })
+end, { desc = 'Search [G]it [F]iles' })
 vim.keymap.set('n', '<leader>sf', function()
-  require('telescope.builtin').find_files({ cwd = get_root(), hidden = true })
+  require('telescope.builtin').find_files({
+    cwd = GET_ROOT(),
+    hidden = true,
+    layout_config = {
+      preview_width = 0.5,
+    }
+  })
 end, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 
-function get_root()
+function GET_ROOT()
   ---@type string?
   local path = vim.api.nvim_buf_get_name(0)
   path = path ~= "" and vim.loop.fs_realpath(path) or nil
@@ -48,7 +60,7 @@ function get_root()
       end, workspace) or client.config.root_dir and { client.config.root_dir } or {}
       for _, p in ipairs(paths) do
         local r = vim.loop.fs_realpath(p)
-        if path:find(r, 1, true) then
+        if r and path:find(r, 1, true) then
           roots[#roots + 1] = r
         end
       end
