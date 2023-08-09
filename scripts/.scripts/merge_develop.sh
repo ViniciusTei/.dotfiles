@@ -20,7 +20,7 @@ git fetch
 git checkout develop
 git pull --ff-only
 echo "Merging ${branch} with develop"
-git merge --ff-only ${branch}
+git merge ${branch}
 CONFLICTS=$?
 if [ $CONFLICTS -ne 0 ] ; then
    echo "The merge failed due to clonficts. Try fixing the merge conflicts to continue!"

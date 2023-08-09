@@ -25,7 +25,7 @@ case $choice in
     read branch
 
     echo "Executing merge_develop.sh..."
-    ~/.scripts//merge_develop.sh -b $branch
+    ~/.scripts/merge_develop.sh -b $branch
     ;;
   3)
     s=$(tmux ls | grep cbrdoc)
