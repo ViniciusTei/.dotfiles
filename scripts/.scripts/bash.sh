@@ -1,7 +1,21 @@
+# Função para verificar se um diretório ou seus pais pertencem a um repositório Git
+is_inside_git_repo() {
+    local dir="$PWD"
+
+    while [ "$dir" != "/" ]; do
+        if [ -d "$dir/.git" ]; then
+            return 0 # Dentro de um repositório Git
+        fi
+        dir=$(dirname "$dir")
+    done
+
+    return 1 # Não está dentro de um repositório Git
+}
+
 # Função para recuperar o nome da branch atual
 get_branch_name() {
-    # Verifica se o diretório atual é um repositório Git
-    if [ -d .git ]; then
+    # Verifica se o diretório atual pertence a um repositório Git
+    if is_inside_git_repo; then
         branch_name=$(git rev-parse --abbrev-ref HEAD)
         echo "($branch_name) "
     fi
