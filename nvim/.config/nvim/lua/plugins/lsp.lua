@@ -52,6 +52,7 @@ local servers = {
   clangd = {},
   pyright = {},
   tsserver = {},
+  tailwindcss = {},
 
   lua_ls = {
     Lua = {
