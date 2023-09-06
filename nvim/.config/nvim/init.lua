@@ -23,9 +23,6 @@ require('lazy').setup({
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
 
-  -- Detect tabstop and shiftwidth automatically
-  'tpope/vim-sleuth',
-
   {
     -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
@@ -39,7 +36,7 @@ require('lazy').setup({
       { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
-      'folke/neodev.nvim',
+      {'folke/neodev.nvim', opts = {} },
     },
   },
 
@@ -163,6 +160,10 @@ require('lazy').setup({
     -- Sup Copilot
     'github/copilot.vim',
 
+    {
+      'rmagatti/auto-session',
+    }
+
 }, {})
 
 -- [[ Configure Telescope]]
@@ -173,5 +174,10 @@ require 'plugins.lsp'
 
 -- [[ Configure nvim-cmp ]]
 require 'plugins.cmp'
+
+-- [[ Configure which-key ]]
+require 'plugins.whichkey'
+
+require 'plugins.autosessions'
 
 vim.g.copilot_assume_mapped = true
