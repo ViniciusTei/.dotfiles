@@ -33,10 +33,10 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
+      { 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
-      {'folke/neodev.nvim', opts = {} },
+      { 'folke/neodev.nvim',       opts = {} },
     },
   },
 
@@ -58,6 +58,7 @@ require('lazy').setup({
   -- Signature LSP Kind see: https://github.com/ray-x/lsp_signature.nvim
   'ray-x/lsp_signature.nvim',
   'onsails/lspkind-nvim',
+  'windwp/nvim-ts-autotag',
 
   {
     -- Autopairs enable to add parentheses after selecting function or method item
@@ -79,7 +80,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',                opts = {} },
   {
     -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -93,7 +94,8 @@ require('lazy').setup({
         changedelete = { text = '~' },
       },
       on_attach = function(bufnr)
-        vim.keymap.set('n', '<leader>gp', require('gitsigns').prev_hunk, { buffer = bufnr, desc = '[G]o to [P]revious Hunk' })
+        vim.keymap.set('n', '<leader>gp', require('gitsigns').prev_hunk,
+          { buffer = bufnr, desc = '[G]o to [P]revious Hunk' })
         vim.keymap.set('n', '<leader>gn', require('gitsigns').next_hunk, { buffer = bufnr, desc = '[G]o to [N]ext Hunk' })
         vim.keymap.set('n', '<leader>ph', require('gitsigns').preview_hunk, { buffer = bufnr, desc = '[P]review [H]unk' })
       end,
@@ -123,46 +125,42 @@ require('lazy').setup({
     },
   },
 
+  { "lukas-reineke/indent-blankline.nvim", main = "ibl",     opts = {} },
+
+  -- "gc" to comment visual regions/lines
+  { 'numToStr/Comment.nvim',               opts = {} },
+
+  -- Fuzzy Finder (files, lsp, etc)
+  { 'nvim-telescope/telescope.nvim',       branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim' } },
+
+  -- Fuzzy Finder Algorithm which requires local dependencies to be built.
+  -- Only load if `make` is available. Make sure you have the system
+  -- requirements installed.
   {
-    -- Add indentation guides even on blank lines
-    'lukas-reineke/indent-blankline.nvim',
-    -- Enable `lukas-reineke/indent-blankline.nvim`
-    -- See `:help indent_blankline.txt`
-    opts = {
-      char = '┊',
-      show_trailing_blankline_indent = false,
-    },
-    },
+    'nvim-telescope/telescope-fzf-native.nvim',
+    -- NOTE: If you are having trouble with this installation,
+    --       refer to the README for telescope-fzf-native for more instructions.
+    build = 'make',
+    cond = function()
+      return vim.fn.executable 'make' == 1
+    end,
+  },
 
-    -- "gc" to comment visual regions/lines
-    { 'numToStr/Comment.nvim', opts = {} },
 
-    -- Fuzzy Finder (files, lsp, etc)
-    { 'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim' } },
+  require 'plugins.treesitter',
 
-    -- Fuzzy Finder Algorithm which requires local dependencies to be built.
-    -- Only load if `make` is available. Make sure you have the system
-    -- requirements installed.
-    {
-      'nvim-telescope/telescope-fzf-native.nvim',
-      -- NOTE: If you are having trouble with this installation,
-      --       refer to the README for telescope-fzf-native for more instructions.
-      build = 'make',
-      cond = function()
-        return vim.fn.executable 'make' == 1
-      end,
-    },
+  require 'plugins.debug',
 
-    require 'plugins.treesitter',
+  require 'plugins.formatting',
 
-    require 'plugins.debug',
+  require 'plugins.linting',
 
-    -- Sup Copilot
-    'github/copilot.vim',
+  -- Sup Copilot
+  -- 'github/copilot.vim',
 
-    {
-      'rmagatti/auto-session',
-    }
+  {
+    'rmagatti/auto-session',
+  },
 
 }, {})
 
