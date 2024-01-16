@@ -50,10 +50,10 @@ end
 --  the `settings` field of the server config. You must look up that documentation yourself.
 local servers = {
   clangd = {},
-  pyright = {},
+  -- pyright = {},
   tsserver = {},
   tailwindcss = {},
-  gopls = {},
+  -- gopls = {},
 
   lua_ls = {
     Lua = {
@@ -92,4 +92,3 @@ require 'lsp_signature'.setup()
 require('lspkind').init({
   mode = 'symbol_text',
 })
-
