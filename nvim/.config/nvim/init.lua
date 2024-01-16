@@ -158,7 +158,7 @@ require('lazy').setup({
     require 'plugins.debug',
 
     -- Sup Copilot
-    'github/copilot.vim',
+    -- 'github/copilot.vim',
 
     {
       'rmagatti/auto-session',
