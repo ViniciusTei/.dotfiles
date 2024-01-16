@@ -1,12 +1,12 @@
 #! /bin/bash
 
-alias tmuxnew=tmux new -A -s vinicius 
+alias tmuxnew='tmux new -A -s vinicius'
 
 # cd to projects folder with fuzzy finder
-alias od='cd $(find ~/Documentos/www -maxdepth 1 -type d | fzf)'
+alias od='cd $(find ~/Documents/www -maxdepth 2 -type d | fzf --height 40% --layout=reverse --border)'
 
 # nvim open project aliases
-alias nd='nvim $(find ~/Documentos/www -maxdepth 1 -type d | fzf)'
+alias nd='nvim $(find ~/Documents/www -maxdepth 2 -type d | fzf --height 40% --layout=reverse --border)'
 alias n=nvim
 
 # work developments
