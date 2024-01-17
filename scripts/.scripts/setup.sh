@@ -8,6 +8,8 @@ sudo apt install \
   stow \
   xclip \
   ripgrep \
+  tmux \
+  i3 \
 
 
 # nvm install
