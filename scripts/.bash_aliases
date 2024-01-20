@@ -12,5 +12,5 @@ alias n=nvim
 
 # work developments
 alias cbrdoc.sh="~/.scripts/cbrdoc.sh"
-alias layout="~./scripts/layout.sh"
+alias layout="~/.scripts/layout.sh"
 alias gitcheckout='git branch | fzf | xargs git checkout'
