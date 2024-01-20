@@ -1,7 +1,7 @@
 require('auto-session').setup {
   log_level = vim.log.levels.ERROR,
   auto_session_suppress_dirs = { "~/", "~/Documents", "~/Downloads", "/" },
-  auto_session_use_git_branch = false,
+  auto_session_use_git_branch = true,
   auto_session_root_dir = "~/.config/nvim/sessions/",
   auto_session_enabled = true,
   auto_save_enabled = true,
