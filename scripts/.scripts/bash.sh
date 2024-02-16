@@ -14,19 +14,31 @@ is_inside_git_repo() {
 
 # Função para recuperar o nome da branch atual
 get_branch_name() {
+
+    RED="\e[91m"
+    YELLOW="\e[93m"
+    ENDCOLOR="\e[0m"
+
     # Verifica se o diretório atual pertence a um repositório Git
     if is_inside_git_repo; then
-        branch_name=$(git rev-parse --abbrev-ref HEAD)
-        echo "($branch_name) "
+      branch_name=$(git rev-parse --abbrev-ref HEAD)
+      if git status | grep -q "Changes not staged for commit"; then
+        echo -e "${RED}󱓊 ${branch_name}${ENDCOLOR} "
+      elif git status | grep -q "Changes to be committed"; then
+        echo -e "${YELLOW}󱓏 ${branch_name}${ENDCOLOR} "
+      else
+          echo " $branch_name "
+      fi
     fi
 }
 
 # Função para atualizar o prompt (PS1)
 update_prompt() {
-    local current_dir="\[\e[1;34m\]\w\[\e[m\] "  # Blue color for the current directory
-    local git_branch="\[\e[1;36m\]\$(get_branch_name)\[\e[m\]"        # Get the Git branch name
-    local prompt="$current_dir$git_branch$"  # current_dir(branch)$
-    PS1=" $prompt "
+
+    local current_dir="\e[1;40;1m\w "  # Blue color for the current directory
+    local git_branch="\[\e[1;36m\]\$(get_branch_name)\e\[\e[m\]"        # Get the Git branch name
+    local prompt="$current_dir$git_branch \n"  # current_dir(branch)$
+    PS1="$prompt "
 }
 
 # Execute a função update_prompt sempre que você mudar de diretório
