@@ -2,6 +2,7 @@
 -- see `:help telescope` and `:help telescope.setup()`
 require('telescope').setup {
   defaults = {
+    color_devicons = true,
     mappings = {
       i = {
         ['<c-u>'] = false,
@@ -25,7 +26,7 @@ vim.keymap.set('n', '<leader>/', function()
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
 
-vim.keymap.set('n', '<leader>gf', function ()
+vim.keymap.set('n', '<leader>gf', function()
   require('telescope.builtin').git_status({
     layout_config = {
       preview_width = 0.5,

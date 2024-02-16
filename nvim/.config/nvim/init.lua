@@ -142,6 +142,8 @@ require('lazy').setup({
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim',               opts = {} },
 
+  { 'nvim-tree/nvim-web-devicons' },
+
   -- Fuzzy Finder (files, lsp, etc)
   { 'nvim-telescope/telescope.nvim',       branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim' } },
 
