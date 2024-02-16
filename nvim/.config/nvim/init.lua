@@ -102,14 +102,7 @@ require('lazy').setup({
     },
   },
 
-  {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'onedark'
-    end,
-  },
+  { "catppuccin/nvim",      name = "catppuccin", priority = 1000 },
 
   {
     'rmagatti/auto-session',
@@ -122,7 +115,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = true,
-        theme = 'onedark',
+        theme = 'catppuccin',
         component_separators = '|',
         section_separators = '',
       },
@@ -189,3 +182,4 @@ require 'plugins.whichkey'
 require 'plugins.autosessions'
 
 vim.g.copilot_assume_mapped = true
+vim.cmd [[colorscheme catppuccin]]
