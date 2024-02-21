@@ -1,5 +1,8 @@
 #! /bin/bash
 
+# execute custom bash
+. ~/.scripts/bash.sh
+
 alias tmuxnew='tmux new -A -s vinicius'
 
 # cd to projects folder with fuzzy finder
