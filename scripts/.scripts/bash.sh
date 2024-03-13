@@ -23,17 +23,21 @@ get_branch_name() {
     if is_inside_git_repo; then
       branch_name=$(git rev-parse --abbrev-ref HEAD)
       if git status | grep -q "Changes not staged for commit"; then
-        echo -e "${RED}󱓊 ${branch_name}${ENDCOLOR} "
+        echo -e "${RED} ${branch_name} ${ENDCOLOR} "
       elif git status | grep -q "Changes to be committed"; then
-        echo -e "${YELLOW}󱓏 ${branch_name}${ENDCOLOR} "
+        echo -e "${YELLOW} ${branch_name} ${ENDCOLOR} "
+      elif git status | grep -q "Your branch is ahead of"; then
+        echo -e " ${branch_name}  "
+      elif git status | grep -q "Your branch is behind"; then
+        echo -e " ${branch_name}  "
       else
-          echo " $branch_name "
+          echo " $branch_name 󱋌 "
       fi
     fi
 }
 
 # Função para atualizar o prompt (PS1)
-update_prompt() {
+better_prompt() {
 
     local current_dir="\e[1;40;1m\w "  # Blue color for the current directory
     local git_branch="\[\e[1;36m\]\$(get_branch_name)\e\[\e[m\]"        # Get the Git branch name
@@ -41,11 +45,29 @@ update_prompt() {
     PS1="$prompt "
 }
 
+# Funcao para adicionar suggestoes para o comando cd
+better_cd() {
+  cd $1
+  if [ -z $1 ] 
+  then 
+    select="$(ls -a $pwd | fzf --height 40% --reverse)"
+    if [[ -d "$select" ]] 
+    then
+      cd "$select"
+    elif [[ -f "$select" ]] 
+    then
+      nvim "$select"
+    fi
+  fi
+}
+
 # Execute a função update_prompt sempre que você mudar de diretório
 cd() {
     builtin cd "$@"
-    update_prompt
+    better_prompt
 }
 
-# Execute a função update_prompt ao iniciar o shell
-update_prompt
+
+# Execute ao iniciar o shell
+alias cd="better_cd"
+better_prompt
