@@ -40,6 +40,9 @@ require('lazy').setup({
     },
   },
 
+  'windwp/nvim-ts-autotag',
+  require 'plugins.treesitter',
+
   {
     -- Autocompletion
     'hrsh7th/nvim-cmp',
@@ -55,10 +58,10 @@ require('lazy').setup({
       'rafamadriz/friendly-snippets',
     },
   },
+
   -- Signature LSP Kind see: https://github.com/ray-x/lsp_signature.nvim
   'ray-x/lsp_signature.nvim',
   'onsails/lspkind-nvim',
-  'windwp/nvim-ts-autotag',
 
   {
     -- Autopairs enable to add parentheses after selecting function or method item
@@ -102,7 +105,11 @@ require('lazy').setup({
     },
   },
 
-  { "catppuccin/nvim",      name = "catppuccin", priority = 1000 },
+  {
+    'catppuccin/nvim',
+    name = 'catppuccin',
+    priority = 1000,
+  },
 
   {
     'rmagatti/auto-session',
@@ -153,8 +160,40 @@ require('lazy').setup({
     end,
   },
 
+  -- {
+  --   'laytan/tailwind-sorter.nvim',
+  --   dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-lua/plenary.nvim' },
+  --   build = 'cd formatter && npm i && npm run build',
+  --   config = true,
+  --   opts = {
+  --     on_save_enabled = true,
+  --     on_save_pattern = { '*.html', '*.js', '*.jsx', '*.tsx', '*.twig', '*.hbs', '*.php', '*.heex', '*.astro' },
+  --     node_path = '/home/vinicius/.nvm/versions/node/v16.20.2/bin/node',
+  --   }
+  -- },
+  -- {
+  --   'huggingface/llm.nvim',
+  --   opts = {
+  --     backend = "ollama",
+  --     model = "codellama",
+  --     url = "http://localhost:11434/api/generate",
+  --     request_body = {},
+  --     lsp = {
+  --       bin_path = vim.api.nvim_call_function("stdpath", { "data" }) .. "/mason/bin/llm-ls",
+  --     },
+  --     tokenizer = nil,
+  --     tokens_to_clear = { "<EOT>" },
+  --     fim = {
+  --       enabled = true,
+  --       prefix = "<PRE> ",
+  --       middle = " <MID>",
+  --       suffix = " <SUF>",
+  --     },
+  --     context_window = 4096,
+  --   }
+  -- },
 
-  require 'plugins.treesitter',
+  require 'plugins.css',
 
   require 'plugins.debug',
 

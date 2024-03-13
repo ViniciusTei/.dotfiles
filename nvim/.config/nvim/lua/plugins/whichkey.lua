@@ -5,4 +5,10 @@ wk.register({
   g = { name = "Go to" },
   m = { name = "Format" },
   o = { name = "Open" },
+  c = { name = "[LSP] Code" },
+  w = { name = "[LSP] Workspace" },
+  r = { name = "[LSP] Renam" },
+  d = { name = "[LSP] Document" },
+  s = { name = "Search" },
+  p = { name = "[Git] Preview" },
 }, { prefix = '<leader>' })

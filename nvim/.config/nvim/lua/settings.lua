@@ -50,15 +50,15 @@ vim.o.completeopt = 'menuone,noselect'
 vim.o.termguicolors = true
 
 -- Set auto-sessions options
-vim.o.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
-vim.keymap.set('n', '<leader>gb',':b#<CR>', { silent = true, desc = 'Go back to prev buffer' })
-vim.keymap.set('n', '<leader>oe',':Explore <CR>', { silent = true, desc = 'Open file explorer' })
+vim.keymap.set('n', '<leader>gb', ':b#<CR>', { silent = true, desc = 'Go back to prev buffer' })
+vim.keymap.set('n', '<leader>oe', ':Explore <CR>', { silent = true, desc = 'Open file explorer' })
 
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
@@ -81,6 +81,15 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnos
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
+-- greatest remap ever stolen directly from ThePrimeagen
+vim.keymap.set("x", "<leader>p", [["_dP]])
+
+-- next greatest remap ever : asbjornHaland
+vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
+vim.keymap.set("n", "<leader>Y", [["+Y]])
+
+vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
+
 -- Remap to search and replace
 vim.keymap.set({ "v", "n" }, "<leader>sr", ":%s/", { desc = "Buffer search and replace" })
 
@@ -89,4 +98,3 @@ vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 vim.bo.softtabstop = 2
-

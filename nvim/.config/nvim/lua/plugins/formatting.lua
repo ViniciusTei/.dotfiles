@@ -19,12 +19,27 @@ return {
         lsp_fallback = true,
         async = false,
         timeout_ms = 500,
-      }
+      },
+      -- formatters = {
+      --   prettier = {
+      --     args = function(self, ctx)
+      --       if vim.endswith(ctx.filename, ".tsx") then
+      --         return {
+      --           "--stdin-filepath",
+      --           "$FILENAME",
+      --           "--plugin",
+      --           "prettier-plugin-tailwindcss",
+      --         }
+      --       end
+      --       return { "--stdin-filepath", "$FILENAME", "--plugin", "prettier-plugin-tailwindcss" }
+      --     end,
+      --   },
+      -- }
     })
     vim.keymap.set({ 'n', 'v' }, "<leader>mp", function()
       conform.format({
         lsp_fallback = true,
-        async = false,
+        async = true,
         timeout_ms = 500
       })
     end, { desc = 'Format file or range' })

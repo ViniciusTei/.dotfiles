@@ -6,11 +6,11 @@ require('luasnip.loaders.from_vscode').lazy_load()
 luasnip.config.setup {}
 local lspkind = require('lspkind')
 local source_mapping = {
-  buffer = "◉ Buffer",
-  nvim_lsp = "👐 LSP",
-  nvim_lua = "🌙 Lua",
-  path = "🚧 Path",
-  luasnip = "🌜 LuaSnip"
+  buffer = " Buffer",
+  nvim_lsp = "󰙜 LSP",
+  nvim_lua = "󰢱 Lua",
+  path = " Path",
+  luasnip = "󰘦 LuaSnip"
 }
 
 cmp.setup {
@@ -29,6 +29,13 @@ cmp.setup {
       behavior = cmp.ConfirmBehavior.Replace,
       select = true,
     },
+    ['<Tab>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      else
+        fallback()
+      end
+    end, { 'i', 's' }),
     ['<S-Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
