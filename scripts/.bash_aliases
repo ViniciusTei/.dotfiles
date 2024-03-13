@@ -6,7 +6,7 @@
 alias tmuxnew='tmux new -A -s vinicius'
 
 # cd to projects folder with fuzzy finder
-alias od='cd $(find ~/Documents/www -maxdepth 2 -type d | fzf --height 40% --layout=reverse --border)'
+alias od='cd $(find ~/ -maxdepth 4 -type d -not -path "*/.*" | fzf --height 40% --layout=reverse --border)'
 
 # nvim open project aliases
 alias nvim="~/Downloads/nvim-linux64/bin/nvim"
