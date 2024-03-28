@@ -19,3 +19,4 @@ alias layout="~/.scripts/layout.sh"
 alias gitcheckout='git branch | fzf --height 40% --layout=reverse --border | xargs git checkout'
 alias gc='git branch | fzf --height 40% --layout=reverse --border | xargs git checkout'
 alias gcr='git branch -r | fzf --height 40% --layout=reverse --border | cut -d'/' -f2- | xargs git checkout'
+alias ts="~/.scripts/tmux-sessionize.sh"
