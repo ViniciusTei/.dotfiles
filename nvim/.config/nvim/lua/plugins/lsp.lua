@@ -53,7 +53,7 @@ local servers = {
   -- pyright = {},
   tsserver = {},
   tailwindcss = {},
-  -- gopls = {},
+  gopls = {},
 
   lua_ls = {
     Lua = {
