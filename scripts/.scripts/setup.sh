@@ -12,6 +12,9 @@ sudo apt install \
   i3 \
   libx11-dev \
 
+cd ~/.dotfiles
+stow .
+
 # nvm install
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 
