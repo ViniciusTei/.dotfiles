@@ -42,3 +42,11 @@ Dentro de `/nvim`:
 2. Lembre de instalar o stow
 3. Rode o arquivo `setup.sh`
 4. Verifique a instalacao
+
+*Em teste*
+
+Você pode utilizar o comando abaixo para fazer o setup automaticamente
+
+```bash
+curl -o- https://raw.githubusercontent.com/ViniciusTei/.dotfiles/master/install.sh | bash
+```
