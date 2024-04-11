@@ -11,6 +11,7 @@ sudo apt install \
   tmux \
   i3 \
   libx11-dev \
+  xrandr \
 
 cd ~/.dotfiles
 stow .
