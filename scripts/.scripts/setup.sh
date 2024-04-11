@@ -49,3 +49,6 @@ echo "$lines_to_append" >> ~/.bashrc
 
 source ~/.scripts/bash.sh
 source ~/.bashrc
+
+# Setup multiple monitors
+. ~/.scripts/monitors.sh
