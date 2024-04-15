@@ -54,6 +54,14 @@ local servers = {
   tsserver = {},
   tailwindcss = {},
   gopls = {},
+  cssls = {
+    css = {
+      validate = true,
+      lint = {
+        unknownAtRules = "ignore"
+      }
+    }
+  },
 
   lua_ls = {
     Lua = {
