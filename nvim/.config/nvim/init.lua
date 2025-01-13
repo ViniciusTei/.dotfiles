@@ -193,22 +193,6 @@ require('lazy').setup({
   --   }
   -- },
 
-  {
-    'jackMort/ChatGPT.nvim',
-    event = "VeryLazy",
-    config = function()
-      local home = vim.fn.expand("$HOME")
-      require("chatgpt").setup({
-        api_key_cmd = "gpg --decrypt " .. home .. "/open_ai_key.txt.gpg"
-      })
-    end,
-    dependencies = {
-      "MunifTanjim/nui.nvim",
-      "nvim-lua/plenary.nvim",
-      "folke/trouble.nvim",
-      "nvim-telescope/telescope.nvim"
-    }
-  },
   require 'plugins.css',
 
   require 'plugins.debug',
@@ -218,7 +202,7 @@ require('lazy').setup({
   require 'plugins.linting',
 
   -- Sup Copilot
-  -- 'github/copilot.vim',
+  { 'github/copilot.vim' },
 
 }, {})
 
@@ -234,7 +218,7 @@ require 'plugins.cmp'
 -- [[ Configure which-key ]]
 require 'plugins.whichkey'
 
-require 'plugins.autosessions'
+-- require 'plugins.autosessions'
 
 vim.g.copilot_assume_mapped = true
 vim.cmd [[colorscheme catppuccin]]
