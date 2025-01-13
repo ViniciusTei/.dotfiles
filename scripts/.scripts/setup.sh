@@ -3,18 +3,10 @@
 echo "Setting up development tools..."
 
 sudo apt update
-sudo apt install \
-  fzf \
-  stow \
-  xclip \
-  ripgrep \
-  tmux \
-  i3 \
-  libx11-dev \
-  xrandr \
+sudo apt install fzf stow xclip ripgrep tmux i3 libx11-dev
 
 cd ~/.dotfiles
-stow .
+stow nvim i3 tmux scripts
 
 # nvm install
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
