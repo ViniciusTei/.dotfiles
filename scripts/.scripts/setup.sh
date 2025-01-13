@@ -5,11 +5,21 @@ echo "Setting up development tools..."
 sudo apt update
 sudo apt install fzf stow xclip ripgrep tmux i3 libx11-dev
 
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
 cd ~/.dotfiles
-stow nvim i3 tmux scripts
+
+stow nvim 
+stow i3
+stow tmux 
+stow scripts
+
+tmux source ~/.tmux.conf
 
 # nvm install
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+
+cd ~/Downloads
 
 # lazygit install
 LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
