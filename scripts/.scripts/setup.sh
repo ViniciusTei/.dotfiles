@@ -2,6 +2,7 @@
 
 echo "Setting up development tools..."
 
+echo "Installing dependencies..."
 sudo apt update
 sudo apt install fzf stow xclip ripgrep tmux i3 libx11-dev
 
@@ -29,9 +30,10 @@ sudo install lazygit /usr/local/bin
 
 # install xkblayout-state tread keybard layout
 git clone https://github.com/nonpop/xkblayout-state /tmp/xkblayout-state
-make -C /tmp/xkblayout-state
-mv /tmp/xkblayout-state/xkblayout-state /usr/local/bin
+sudo make -C /tmp/xkblayout-state
+sudo mv /tmp/xkblayout-state/xkblayout-state /usr/local/bin
 
+echo "Setting up bash..."
 # Define the lines to append to .bashrc
 lines_to_append="
 export LAYOUT_STATE=\$/usr/local/bin/xkblayout-state
@@ -53,5 +55,11 @@ echo "$lines_to_append" >> ~/.bashrc
 source ~/.scripts/bash.sh
 source ~/.bashrc
 
-# Setup multiple monitors
-. ~/.scripts/monitors.sh
+# Setup multiple monitors if moniotors is passed as an argument
+
+if [ "$1" == "monitors" ]; then
+    echo "Setting up multiple monitors..."
+    . ~/.scripts/monitors.sh
+fi
+
+echo "Development tools setup complete."
