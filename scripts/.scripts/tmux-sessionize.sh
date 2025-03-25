@@ -3,7 +3,7 @@
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    selected=$(find ~/Documents/www -mindepth 1 -maxdepth 2 -type d | fzf --height 40% --layout=reverse --border)
+    selected=$(find ~/Documents -mindepth 1 -maxdepth 2 -type d | fzf --height 40% --layout=reverse --border)
 fi
 
 if [[ -z $selected ]]; then
