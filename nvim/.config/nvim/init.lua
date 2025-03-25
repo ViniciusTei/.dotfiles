@@ -112,10 +112,6 @@ require('lazy').setup({
   },
 
   {
-    'rmagatti/auto-session',
-  },
-
-  {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
     -- See `:help lualine.txt`
@@ -160,38 +156,6 @@ require('lazy').setup({
     end,
   },
 
-  -- {
-  --   'laytan/tailwind-sorter.nvim',
-  --   dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-lua/plenary.nvim' },
-  --   build = 'cd formatter && npm i && npm run build',
-  --   config = true,
-  --   opts = {
-  --     on_save_enabled = true,
-  --     on_save_pattern = { '*.html', '*.js', '*.jsx', '*.tsx', '*.twig', '*.hbs', '*.php', '*.heex', '*.astro' },
-  --     node_path = '/home/vinicius/.nvm/versions/node/v16.20.2/bin/node',
-  --   }
-  -- },
-  -- {
-  --   'huggingface/llm.nvim',
-  --   opts = {
-  --     backend = "ollama",
-  --     model = "codellama",
-  --     url = "http://localhost:11434/api/generate",
-  --     request_body = {},
-  --     lsp = {
-  --       bin_path = vim.api.nvim_call_function("stdpath", { "data" }) .. "/mason/bin/llm-ls",
-  --     },
-  --     tokenizer = nil,
-  --     tokens_to_clear = { "<EOT>" },
-  --     fim = {
-  --       enabled = true,
-  --       prefix = "<PRE> ",
-  --       middle = " <MID>",
-  --       suffix = " <SUF>",
-  --     },
-  --     context_window = 4096,
-  --   }
-  -- },
 
   require 'plugins.css',
 
@@ -217,8 +181,6 @@ require 'plugins.cmp'
 
 -- [[ Configure which-key ]]
 require 'plugins.whichkey'
-
--- require 'plugins.autosessions'
 
 vim.g.copilot_assume_mapped = true
 vim.cmd [[colorscheme catppuccin]]
