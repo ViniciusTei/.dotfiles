@@ -164,6 +164,7 @@ require('lazy').setup({
   require 'plugins.formatting',
 
   require 'plugins.linting',
+  require 'plugins.treesitter',
 
   -- Sup Copilot
   { 'github/copilot.vim' },
