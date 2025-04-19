@@ -99,3 +99,25 @@ vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 vim.bo.softtabstop = 2
+
+-- Atualiza o buffer automaticamente se o arquivo for alterado externamente
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
+  pattern = "*",
+  callback = function()
+    -- Verifica se o arquivo no disco está diferente do buffer em memória
+    if vim.fn.getbufvar(vim.fn.bufnr(), "&modifiable") == 1 then
+      vim.cmd("checktime")
+    end
+  end,
+})
+
+-- Exibe uma mensagem se o arquivo foi alterado
+vim.api.nvim_create_autocmd("FileChangedShellPost", {
+  pattern = "*",
+  callback = function()
+    local filename = vim.fn.expand("%:p")
+    local datetime = os.date("%Y-%m-%d %H:%M:%S")
+    local message = string.format("'%s' foi recarregado em %s", filename, datetime)
+    vim.notify(message, vim.log.levels.INFO, { title = "Arquivo atualizado" })
+  end,
+})
