@@ -157,6 +157,8 @@ require('lazy').setup({
   },
 
 
+  -- require 'local_plugins',
+
   require 'plugins.css',
 
   require 'plugins.debug',
@@ -169,6 +171,26 @@ require('lazy').setup({
   -- Sup Copilot
   { 'github/copilot.vim' },
 
+  {
+    'viniciustei/nvim-todo',
+    dev = true,
+    dir = '/home/vinicius/Documents/nvim-todo',
+    keys = {
+      { "<leader>td", function() require("todolist").open_todo() end, desc = "[T]oDo List" },
+    }
+  },
+
+  {
+    'viniciustei/nvim-todo',
+    dev = true,
+    dir = '/home/vinicius/Documents/nvim-todo',
+    config = function()
+      require("marks")
+    end,
+    keys = {
+      { "<leader>mm", function() require("marks").open() end, desc = "[M]arks" },
+    }
+  },
 }, {})
 
 -- [[ Configure Telescope]]

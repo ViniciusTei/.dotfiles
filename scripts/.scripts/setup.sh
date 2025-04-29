@@ -4,7 +4,7 @@ echo "Setting up development tools..."
 
 echo "Installing dependencies..."
 sudo apt update
-sudo apt install fzf stow xclip ripgrep tmux i3 libx11-dev
+sudo apt install fzf stow xclip ripgrep tmux i3 libx11-dev feh
 
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
