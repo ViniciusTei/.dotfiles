@@ -39,7 +39,7 @@ get_branch_name() {
 # Função para atualizar o prompt (PS1)
 better_prompt() {
 
-    local current_dir="\e[1;40;1m\w "  # Blue color for the current directory
+    local current_dir="\e[1;40;m\w "  # Blue color for the current directory
     local git_branch="\[\e[1;36m\]\$(get_branch_name)\e\[\e[m\]"        # Get the Git branch name
     local prompt="$current_dir$git_branch \n"  # current_dir(branch)$
     PS1="$prompt "

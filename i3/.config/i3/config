@@ -202,3 +202,5 @@ bindsym Ctrl+Shift+Print exec --no-startup-id maim --select | xclip -selection c
 
 # Display Wallpaper
 exec_always feh --bg-fill /home/vinicius/Downloads/wallpaper.jpg
+
+bindsym $mod+Tab workspace back_and_forth
