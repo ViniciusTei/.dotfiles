@@ -186,6 +186,7 @@ bar {
 
 # config monitors
 exec_always "xrandr --output HDMI-A-0 --auto --left-of DisplayPort-2"
+exec_always "xrandr --output DisplayPort-2 --mode 1920x1080 --rate 144.00"
 
 # config keyboard layout
 exec_always exec setxkbmap "us,br", ",winkeys" "grp:alt_shift_toggle"
@@ -202,5 +203,4 @@ bindsym Ctrl+Shift+Print exec --no-startup-id maim --select | xclip -selection c
 
 # Display Wallpaper
 exec_always feh --bg-fill /home/vinicius/Downloads/wallpaper.jpg
-
 bindsym $mod+Tab workspace back_and_forth
