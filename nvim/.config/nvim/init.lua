@@ -257,5 +257,8 @@ require 'plugins.cmp'
 -- [[ Configure which-key ]]
 require 'plugins.whichkey'
 
+vim.keymap.set('n', '<leader>ac', ':AvanteAsk Write a commit message using convetional commits format <CR>',
+  { silent = true, desc = 'avante: write commit' })
+
 vim.g.copilot_assume_mapped = true
 vim.cmd [[colorscheme catppuccin]]
