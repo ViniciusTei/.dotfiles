@@ -44,7 +44,6 @@ cmp.setup {
     { name = 'luasnip' },
     { name = 'buffer' },
     { name = 'path' },
-    { name = 'nvim_lua' }
   },
   formatting = {
     format = function(entry, vim_item)

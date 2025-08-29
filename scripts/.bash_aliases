@@ -7,7 +7,6 @@
 alias od='cd $(find ~/ -maxdepth 4 -type d -not -path "*/.*" | fzf --height 40% --layout=reverse --border)'
 
 # nvim open project aliases
-alias nvim="~/Downloads/nvim-linux64/bin/nvim"
 alias nd='nvim $(find ~/Documents/www -maxdepth 2 -type d | fzf --height 40% --layout=reverse --border)'
 alias n=nvim
 

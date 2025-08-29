@@ -23,7 +23,19 @@ tmux source ~/.tmux.conf
 # nvm install
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 
-cd ~/Downloads
+DOWLOAD_DIR="~/Downloads"
+
+if [ ! -d "$DIR" ]; then
+ 	mkdir -p "$DIR"
+else
+	cd "$DIR"
+fi
+
+# neovim install
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+sudo rm -rf /opt/nvim
+sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 
 # lazygit install
 LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
