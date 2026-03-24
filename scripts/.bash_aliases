@@ -26,3 +26,6 @@ alias gpl='git pull'
 alias cmsg='tmp=$(mktemp); git --no-pager diff --staged > "$tmp"; echo "Prompt: Gere uma mensagem de commit (pt-BR, Conventional Commits) baseada em
    @$tmp; não faça o commit." | copilot'
 
+
+# Bluetooth wrapper
+alias btctl='~/.scripts/btctl.sh'
