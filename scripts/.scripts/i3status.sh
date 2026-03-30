@@ -1,11 +1,5 @@
 #!/bin/bash
 
-battery_level=$(cat /sys/class/power_supply/BAT1/capacity 2>/dev/null || echo "N/A")
-
-if [ "$battery_level" -lte 20 ]; then
-  notify-send "Battery Warning" "Battery level is at $battery_level%!" -u critical
-fi 
-
 i3status -c "~/.config/i3/i3status.conf" | while :
 do
   read line
@@ -19,6 +13,30 @@ do
   if [ "$battery_status" == "Charging" ]; then
     battery_status_icon="󱐋"
   fi
+  
+  if [ "$battery_level" -eq 25 ]; then
+    if [ "$battery_status" != "Charging" ]; then
+      notify-send "Battery Warning" "Battery level is at $battery_level%!" -u low
+    fi
+  fi 
+  
+  if [ "$battery_level" -eq 15 ]; then
+    if [ "$battery_status" != "Charging" ]; then
+      notify-send "Battery Warning" "Battery level is at $battery_level%!" -u normal
+    fi
+  fi 
+  
+  if [ "$battery_level" -eq 10 ]; then
+    if [ "$battery_status" != "Charging" ]; then
+      notify-send "Battery Warning" "Battery level is at $battery_level%!" -u critical
+    fi
+  fi 
+  
+  if [ "$battery_level" -eq 5 ]; then
+    if [ "$battery_status" != "Charging" ]; then
+      notify-send "Battery Warning" "Battery level is at $battery_level%!" -u critical
+    fi
+  fi 
 
   if [ "$battery_level" != "N/A" ]; then
     if [ "$battery_level" -ge 80 ]; then
