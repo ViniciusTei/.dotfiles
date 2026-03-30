@@ -78,4 +78,10 @@ if [ "$1" == "monitors" ]; then
     . ~/.scripts/monitors.sh
 fi
 
+echo "Installing monitor hotplug udev rule..."
+echo "ACTION==\"change\", SUBSYSTEM==\"drm\", RUN+=\"$HOME/.scripts/monitor-hotplug.sh\"" \
+    | sudo tee /etc/udev/rules.d/95-monitor-hotplug.rules > /dev/null
+sudo udevadm control --reload-rules
+sudo udevadm trigger --subsystem-match=drm
+
 echo "Development tools setup complete."
