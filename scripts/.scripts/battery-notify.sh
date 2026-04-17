@@ -1,4 +1,5 @@
 #!/bin/bash
+trap 'exit 0' SIGTERM SIGINT
 
 while true; do
     battery_level=$(cat /sys/class/power_supply/BAT1/capacity 2>/dev/null || echo "N/A")
