@@ -10,5 +10,5 @@ pkill -f battery-notify.sh 2>/dev/null || true
 
 # Start one bar per connected monitor
 while IFS= read -r output; do
-    MONITOR="$output" polybar main &
+    MONITOR="$output" polybar --config="$HOME/.config/polybar/config.ini" main &
 done < <(xrandr --query | grep ' connected' | awk '{print $1}')

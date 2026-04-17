@@ -4,7 +4,12 @@ echo "Setting up development tools..."
 
 echo "Installing dependencies..."
 sudo apt update
-sudo apt install fzf stow xclip ripgrep tmux i3 libx11-dev feh rofi polybar
+sudo apt install -y fzf stow xclip ripgrep tmux i3 libx11-dev feh rofi \
+    build-essential cmake cmake-data pkg-config python3 python3-sphinx \
+    libcairo2-dev libxcb1-dev libxcb-util0-dev libxcb-randr0-dev libxcb-composite0-dev \
+    python3-xcbgen xcb-proto libxcb-image0-dev libxcb-ewmh-dev libxcb-icccm4-dev \
+    libxcb-xkb-dev libxcb-xrm-dev libasound2-dev libmpdclient-dev libiw-dev \
+    libcurl4-openssl-dev libpulse-dev libjsoncpp-dev libnl-genl-3-dev libuv1-dev
 
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
@@ -21,6 +26,21 @@ mkdir -p ~/.config/tmux/plugins/catppuccin
 git clone -b v2.1.3 https://github.com/catppuccin/tmux.git ~/.config/tmux/plugins/catppuccin/tmux
 
 tmux source ~/.tmux.conf
+
+# polybar install from source
+POLYBAR_VERSION="3.7.2"
+POLYBAR_BUILD_DIR="/tmp/polybar-build"
+rm -rf "$POLYBAR_BUILD_DIR" && mkdir -p "$POLYBAR_BUILD_DIR"
+curl -L "https://github.com/polybar/polybar/releases/download/${POLYBAR_VERSION}/polybar-${POLYBAR_VERSION}.tar.gz" \
+    -o "$POLYBAR_BUILD_DIR/polybar.tar.gz"
+tar xzf "$POLYBAR_BUILD_DIR/polybar.tar.gz" -C "$POLYBAR_BUILD_DIR"
+mkdir -p "$POLYBAR_BUILD_DIR/polybar-${POLYBAR_VERSION}/build"
+cmake -S "$POLYBAR_BUILD_DIR/polybar-${POLYBAR_VERSION}" \
+      -B "$POLYBAR_BUILD_DIR/polybar-${POLYBAR_VERSION}/build" \
+      -DCMAKE_BUILD_TYPE=Release -DBUILD_DOC=OFF
+make -j"$(nproc)" -C "$POLYBAR_BUILD_DIR/polybar-${POLYBAR_VERSION}/build"
+sudo make -C "$POLYBAR_BUILD_DIR/polybar-${POLYBAR_VERSION}/build" install
+rm -rf "$POLYBAR_BUILD_DIR"
 
 # nvm install
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
