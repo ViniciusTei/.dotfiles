@@ -4,7 +4,7 @@ echo "Setting up development tools..."
 
 echo "Installing dependencies..."
 sudo apt update
-sudo apt install fzf stow xclip ripgrep tmux i3 libx11-dev feh rofi
+sudo apt install fzf stow xclip ripgrep tmux i3 libx11-dev feh rofi polybar
 
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
@@ -15,6 +15,7 @@ stow i3
 stow tmux 
 stow scripts
 stow rofi
+stow polybar
 
 mkdir -p ~/.config/tmux/plugins/catppuccin
 git clone -b v2.1.3 https://github.com/catppuccin/tmux.git ~/.config/tmux/plugins/catppuccin/tmux
