@@ -181,4 +181,9 @@ return {
       signature = { enabled = true },
     },
   },
+
+  {
+    'ray-x/lsp_signature.nvim',
+    event = 'InsertEnter',
+  },
 }
