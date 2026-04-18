@@ -29,3 +29,6 @@ alias cmsg='tmp=$(mktemp); git --no-pager diff --staged > "$tmp"; echo "Prompt: 
 
 # Bluetooth wrapper
 alias btctl='~/.scripts/btctl.sh'
+
+# Harness
+alias cc='claude --dangerously-skip-permissions'
