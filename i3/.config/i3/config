@@ -179,6 +179,8 @@ bindsym $mod+r mode "resize"
 
 # config monitors
 exec_always ~/.scripts/monitor-hotplug.sh
+
+# config status bar
 exec_always ~/.scripts/launch-polybar.sh
 
 # config keyboard layout
@@ -195,5 +197,5 @@ bindsym Ctrl+$mod+Print exec --no-startup-id maim --window $(xdotool getactivewi
 bindsym Ctrl+Shift+Print exec --no-startup-id maim --select | xclip -selection clipboard -t image/png
 
 # Display Wallpaper
-exec_always feh --bg-fill /home/vinicius/Downloads/wallpaper.jpg
+exec_always feh --bg-fill /home/$USER/.dotfiles/assets/wallpaper.jpg
 bindsym $mod+Tab workspace back_and_forth
