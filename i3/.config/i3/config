@@ -196,6 +196,9 @@ bindsym Ctrl+Print exec --no-startup-id maim | xclip -selection clipboard -t ima
 bindsym Ctrl+$mod+Print exec --no-startup-id maim --window $(xdotool getactivewindow) | xclip -selection clipboard -t image/png
 bindsym Ctrl+Shift+Print exec --no-startup-id maim --select | xclip -selection clipboard -t image/png
 
+for_window [class="Rofi"] floating enable
+for_window [class="Rofi"] border none
+
 # Display Wallpaper
 exec_always feh --bg-fill /home/$USER/.dotfiles/assets/base.png
 bindsym $mod+Tab workspace back_and_forth
