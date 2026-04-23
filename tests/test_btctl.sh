@@ -94,6 +94,8 @@ assert_exit "connect no MAC → exit 2"   2 "$BTCTL" connect
 assert_exit "disconnect no MAC → exit 2" 2 "$BTCTL" disconnect
 assert_exit "remove no MAC → exit 2"    2 "$BTCTL" remove
 assert_exit "info no MAC → exit 2"      2 "$BTCTL" info
+assert_exit "power on → exit 0"  0 "$BTCTL" power on
+assert_exit "power off → exit 0" 0 "$BTCTL" power off
 
 # ── Device op tests ───────────────────────────────────────────────────────────
 
@@ -102,10 +104,31 @@ assert_exit "connect <MAC> → exit 0"    0 "$BTCTL" connect    AA:BB:CC:DD:EE:F
 assert_exit "disconnect <MAC> → exit 0" 0 "$BTCTL" disconnect AA:BB:CC:DD:EE:FF
 assert_exit "remove <MAC> → exit 0"     0 "$BTCTL" remove     AA:BB:CC:DD:EE:FF
 assert_exit "scan → exit 0"             0 "$BTCTL" scan 0
+assert_eq "scan: no stdout" "" "$("$BTCTL" scan 0)"
 
 # info returns output
 output=$("$BTCTL" info AA:BB:CC:DD:EE:FF)
 assert_eq "info: contains Connected" "yes" "$(echo "$output" | grep -o 'Connected: yes' | cut -d' ' -f2 || true)"
+
+# ── Failure path tests ────────────────────────────────────────────────────────
+FAIL_DIR=$(mktemp -d)
+trap 'rm -rf "$FAIL_DIR"' EXIT
+
+cat > "$FAIL_DIR/bluetoothctl" << 'FAILMOCK'
+#!/usr/bin/env bash
+exit 1
+FAILMOCK
+chmod +x "$FAIL_DIR/bluetoothctl"
+
+OLD_PATH="$PATH"
+export PATH="$FAIL_DIR:$PATH"
+
+assert_exit "pair failure → exit 1"       1 "$BTCTL" pair       AA:BB:CC:DD:EE:FF
+assert_exit "connect failure → exit 1"    1 "$BTCTL" connect    AA:BB:CC:DD:EE:FF
+assert_exit "disconnect failure → exit 1" 1 "$BTCTL" disconnect AA:BB:CC:DD:EE:FF
+assert_exit "remove failure → exit 1"     1 "$BTCTL" remove     AA:BB:CC:DD:EE:FF
+
+export PATH="$OLD_PATH"
 
 echo ""
 echo "Results: $PASS passed, $FAIL failed"
