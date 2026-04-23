@@ -112,7 +112,7 @@ assert_eq "info: contains Connected" "yes" "$(echo "$output" | grep -o 'Connecte
 
 # ── Failure path tests ────────────────────────────────────────────────────────
 FAIL_DIR=$(mktemp -d)
-trap 'rm -rf "$FAIL_DIR"' EXIT
+trap 'rm -rf "$MOCK_DIR" "$FAIL_DIR"' EXIT
 
 cat > "$FAIL_DIR/bluetoothctl" << 'FAILMOCK'
 #!/usr/bin/env bash

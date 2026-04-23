@@ -1,23 +1,34 @@
-btctl - wrapper para bluetoothctl
+btctl - CLI wrapper for bluetoothctl
 
-Instalação
-- Copiar scripts/.scripts/btctl.sh para ~/.scripts/btctl.sh (ou usar stow)
-- Tornar executável: chmod +x ~/.scripts/btctl.sh
-- (Opcional) adicionar alias: alias btctl='~/.scripts/btctl.sh' no ~/.bash_aliases
+Installation
+- Use stow from ~/.dotfiles: stow scripts
+- Or manually: cp scripts/.scripts/btctl.sh ~/.scripts/btctl.sh && chmod +x ~/.scripts/btctl.sh
+- Optional alias in ~/.bash_aliases: alias btctl='~/.scripts/btctl.sh'
 
-Uso
-btctl <comando>
+Usage
+btctl <command>
 
-Comandos:
-  power on|off     - Ligar/desligar o adaptador Bluetooth
-  list             - Listar dispositivos conhecidos (nome apenas)
-  scan [secs]      - Scannear por dispositivos por N segundos e listar
-  connected        - Listar dispositivos atualmente conectados
-  pair [--scan]    - Parear dispositivo selecionado (opcionalmente faz scan antes)
-  remove           - Desparear/remover dispositivo
-  help             - Mostrar ajuda
+Commands
+  power on|off|status              Toggle or check bluetooth adapter
+  list [--paired|--available]      List all/paired/unpaired devices
+  connected                        List connected devices
+  scan [seconds]                   Scan for nearby devices (default: 5s)
+  pair <MAC>                       Pair and trust a device (no auto-connect)
+  connect <MAC>                    Connect to a paired device
+  disconnect <MAC>                 Disconnect a device
+  remove <MAC>                     Remove/unpair a device
+  info <MAC>                       Show raw device info
 
-Observações
-- O script mostra apenas os nomes para o usuário. O MAC é usado internamente para conectar/parear/remover.
-- Em caso de nomes duplicados, selecione pelo índice exibido.
-- Recomenda-se ter fzf instalado para seleção interativa aprimorada.
+Output format (list and connected)
+  MAC|NAME|CONNECTED|PAIRED|TRUSTED
+
+  Example:
+  AA:BB:CC:DD:EE:FF|Fone JBL|yes|yes|yes
+
+  power status outputs a single word: yes or no
+
+Notes
+- pair does NOT auto-connect; call connect separately after pairing
+- scan populates bluetoothctl's device cache; use list --available afterwards
+- list --available shows unpaired devices (candidates for pairing)
+- list --paired shows paired devices
