@@ -410,3 +410,29 @@ class BtPanel(Gtk.Window):
                 )[2])
 
         threading.Thread(target=_worker, daemon=True).start()
+
+
+def main():
+    if not _GTK_AVAILABLE:
+        print("Error: python3-gi / GTK3 not available. Install python3-gi.", file=sys.stderr)
+        sys.exit(1)
+
+    apply_css()
+
+    backend = BtBackend()
+    panel = BtPanel(backend)
+
+    def _load_and_show():
+        power_on = backend.power_status()
+        devices = backend.list_paired() if power_on else []
+        panel.populate(power_on, devices)
+        panel.show_all()
+        panel.present()
+        return False  # run once
+
+    GLib.idle_add(_load_and_show)
+    Gtk.main()
+
+
+if __name__ == "__main__":
+    main()
