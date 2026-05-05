@@ -31,7 +31,9 @@ class BtDevice:
 
     @classmethod
     def from_line(cls, line: str) -> "BtDevice":
-        mac, name, connected, paired, trusted = line.split("|", 4)
+        # Peel the 3 fixed boolean fields from the right, leaving "MAC|name" on the left
+        head, connected, paired, trusted = line.rsplit("|", 3)
+        mac, name = head.split("|", 1)
         return cls(
             mac=mac,
             name=name,
@@ -55,11 +57,14 @@ class BtBackend:
         self._btctl = btctl_path
 
     def _run(self, *args) -> subprocess.CompletedProcess:
-        return subprocess.run(
-            [self._btctl, *args],
-            capture_output=True,
-            text=True,
-        )
+        try:
+            return subprocess.run(
+                [self._btctl, *args],
+                capture_output=True,
+                text=True,
+            )
+        except FileNotFoundError:
+            raise RuntimeError(f"btctl not found: {self._btctl}") from None
 
     def power_status(self) -> bool:
         result = self._run("power", "status")
@@ -82,6 +87,6 @@ class BtBackend:
         return result.returncode == 0
 
     def scan_and_list(self) -> List[BtDevice]:
-        self._run("scan", "5")
+        self._run("scan", "5")  # best-effort; ignore failure, existing paired devices still listed
         result = self._run("list", "--paired")
         return parse_devices(result.stdout)
