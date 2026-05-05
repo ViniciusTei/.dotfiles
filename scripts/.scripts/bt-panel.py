@@ -423,11 +423,15 @@ def main():
     panel = BtPanel(backend)
 
     def _load_and_show():
-        power_on = backend.power_status()
-        devices = backend.list_paired() if power_on else []
-        panel.populate(power_on, devices)
-        panel.show_all()
-        panel.present()
+        try:
+            power_on = backend.power_status()
+            devices = backend.list_paired() if power_on else []
+            panel.populate(power_on, devices)
+            panel.show_all()
+            panel.present()
+        except Exception as exc:
+            print(f"bt-panel: startup error: {exc}", file=sys.stderr)
+            Gtk.main_quit()
         return False  # run once
 
     GLib.idle_add(_load_and_show)
