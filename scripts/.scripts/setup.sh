@@ -9,7 +9,8 @@ sudo apt install -y fzf stow xclip ripgrep tmux i3 libx11-dev feh rofi xdotool \
     libcairo2-dev libxcb1-dev libxcb-util0-dev libxcb-randr0-dev libxcb-composite0-dev \
     python3-xcbgen xcb-proto libxcb-image0-dev libxcb-ewmh-dev libxcb-icccm4-dev \
     libxcb-xkb-dev libxcb-xrm-dev libasound2-dev libmpdclient-dev libiw-dev \
-    libcurl4-openssl-dev libpulse-dev libjsoncpp-dev libnl-genl-3-dev libuv1-dev
+    libcurl4-openssl-dev libpulse-dev libjsoncpp-dev libnl-genl-3-dev libuv1-dev \
+    python3-gi gir1.2-gtk-3.0
 
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
