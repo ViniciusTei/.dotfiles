@@ -125,31 +125,46 @@ label.error {
     font-size: 12px;
 }
 button {
-    background-color: #bd93f8;
-    color: #282a36;
+    background-color: #6272a4;
+    background-image: none;
+    color: #f8f8f2;
     border: none;
     border-radius: 4px;
     padding: 2px 10px;
     font-size: 12px;
+    box-shadow: none;
 }
 button:hover {
-    background-color: #caa9fa;
+    background-color: #7c8fbf;
+    background-image: none;
 }
 button.power-on {
     background-color: #50fa7b;
+    background-image: none;
     color: #282a36;
+}
+button.power-on:hover {
+    background-color: #69fb8e;
+    background-image: none;
 }
 button.power-off {
     background-color: #ff5555;
+    background-image: none;
     color: #f8f8f2;
+}
+button.power-off:hover {
+    background-color: #ff6e6e;
+    background-image: none;
 }
 button.scan {
-    background-color: #ffb86c;
-    color: #282a36;
+    background-color: #6272a4;
+    background-image: none;
+    color: #f8f8f2;
 }
 button.scan:disabled {
-    background-color: #6272a4;
-    color: #f8f8f2;
+    background-color: #44475a;
+    background-image: none;
+    color: #6272a4;
 }
 separator {
     background-color: #44475a;
