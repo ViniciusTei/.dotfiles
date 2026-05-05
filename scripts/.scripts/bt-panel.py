@@ -314,13 +314,73 @@ class BtPanel(Gtk.Window):
 
     # ── Action handlers (implemented in Task 3) ───────────────────────────
     def _on_power_toggle(self, button: Gtk.Button):
-        pass
+        is_on = button.get_label() == "ON"
+        button.set_sensitive(False)
+        button.set_label("…")
+
+        def _do():
+            ok = self._backend.set_power(not is_on)
+            if ok:
+                power_on = self._backend.power_status()
+                devices = self._backend.list_paired() if power_on else []
+                self.populate(power_on, devices)
+            else:
+                button.set_label("ON" if is_on else "OFF")
+                button.set_sensitive(True)
+            return False
+
+        GLib.idle_add(_do)
 
     def _on_connect(self, button: Gtk.Button, mac: str, err_label: Gtk.Label):
-        pass
+        button.set_sensitive(False)
+        button.set_label("…")
+        err_label.set_text("")
+        err_label.hide()
+
+        def _do():
+            ok = self._backend.connect(mac)
+            if ok:
+                power_on = self._backend.power_status()
+                devices = self._backend.list_paired()
+                self.populate(power_on, devices)
+            else:
+                button.set_label("Connect")
+                button.set_sensitive(True)
+                err_label.set_text("Connect failed")
+                err_label.show()
+            return False
+
+        GLib.idle_add(_do)
 
     def _on_disconnect(self, button: Gtk.Button, mac: str, err_label: Gtk.Label):
-        pass
+        button.set_sensitive(False)
+        button.set_label("…")
+        err_label.set_text("")
+        err_label.hide()
+
+        def _do():
+            ok = self._backend.disconnect(mac)
+            if ok:
+                power_on = self._backend.power_status()
+                devices = self._backend.list_paired()
+                self.populate(power_on, devices)
+            else:
+                button.set_label("Disconnect")
+                button.set_sensitive(True)
+                err_label.set_text("Disconnect failed")
+                err_label.show()
+            return False
+
+        GLib.idle_add(_do)
 
     def _on_scan(self, button: Gtk.Button):
-        pass
+        button.set_sensitive(False)
+        button.set_label("Scanning…")
+
+        def _do():
+            devices = self._backend.scan_and_list()
+            power_on = self._backend.power_status()
+            self.populate(power_on, devices)
+            return False
+
+        GLib.idle_add(_do)
