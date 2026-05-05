@@ -4,6 +4,7 @@
 import os
 import subprocess
 import sys
+import threading
 from dataclasses import dataclass
 from typing import List
 
@@ -319,7 +320,12 @@ class BtPanel(Gtk.Window):
         button.set_label("…")
 
         def _do():
-            ok = self._backend.set_power(not is_on)
+            try:
+                ok = self._backend.set_power(not is_on)
+            except Exception as exc:
+                button.set_label("ON" if is_on else "OFF")
+                button.set_sensitive(True)
+                return False
             if ok:
                 power_on = self._backend.power_status()
                 devices = self._backend.list_paired() if power_on else []
@@ -338,7 +344,14 @@ class BtPanel(Gtk.Window):
         err_label.hide()
 
         def _do():
-            ok = self._backend.connect(mac)
+            try:
+                ok = self._backend.connect(mac)
+            except Exception as exc:
+                button.set_label("Connect")
+                button.set_sensitive(True)
+                err_label.set_text(f"Error: {exc}")
+                err_label.show()
+                return False
             if ok:
                 power_on = self._backend.power_status()
                 devices = self._backend.list_paired()
@@ -359,7 +372,14 @@ class BtPanel(Gtk.Window):
         err_label.hide()
 
         def _do():
-            ok = self._backend.disconnect(mac)
+            try:
+                ok = self._backend.disconnect(mac)
+            except Exception as exc:
+                button.set_label("Disconnect")
+                button.set_sensitive(True)
+                err_label.set_text(f"Error: {exc}")
+                err_label.show()
+                return False
             if ok:
                 power_on = self._backend.power_status()
                 devices = self._backend.list_paired()
@@ -377,10 +397,16 @@ class BtPanel(Gtk.Window):
         button.set_sensitive(False)
         button.set_label("Scanning…")
 
-        def _do():
-            devices = self._backend.scan_and_list()
-            power_on = self._backend.power_status()
-            self.populate(power_on, devices)
-            return False
+        def _worker():
+            try:
+                devices = self._backend.scan_and_list()
+                power_on = self._backend.power_status()
+                GLib.idle_add(lambda: (self.populate(power_on, devices), False)[1])
+            except Exception:
+                GLib.idle_add(lambda: (
+                    button.set_sensitive(True),
+                    button.set_label("Scan for devices"),
+                    False
+                )[2])
 
-        GLib.idle_add(_do)
+        threading.Thread(target=_worker, daemon=True).start()
