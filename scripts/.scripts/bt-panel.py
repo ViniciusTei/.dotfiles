@@ -185,7 +185,7 @@ class BtPanel(Gtk.Window):
     def __init__(self, backend: BtBackend):
         super().__init__()
         self._backend = backend
-        self._mouse_x, self._mouse_y = get_mouse_position()
+        self._mouse_x, _ = get_mouse_position()
 
         # Window chrome
         self.set_decorated(False)
@@ -193,6 +193,7 @@ class BtPanel(Gtk.Window):
         self.set_keep_above(True)
         self.set_resizable(False)
         self.set_border_width(8)
+        self._positioned = False
 
         # Auto-dismiss on focus loss
         self.connect("focus-out-event", lambda *_: Gtk.main_quit())
@@ -207,6 +208,8 @@ class BtPanel(Gtk.Window):
         self.add(self._root)
 
     def _on_size_allocate(self, widget, allocation):
+        if self._positioned:
+            return
         screen = Gdk.Screen.get_default()
         screen_height = screen.get_height()
         x = self._mouse_x - allocation.width // 2
@@ -214,6 +217,7 @@ class BtPanel(Gtk.Window):
         # Keep panel on-screen horizontally
         x = max(0, min(x, screen.get_width() - allocation.width))
         self.move(x, y)
+        self._positioned = True
 
     def build_header(self, power_on: bool) -> Gtk.Box:
         hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
@@ -288,7 +292,7 @@ class BtPanel(Gtk.Window):
         btn = Gtk.Button(label="Scan for devices")
         btn.get_style_context().add_class("scan")
         btn.set_halign(Gtk.Align.CENTER)
-        btn.connect("clicked", self._on_scan, btn)
+        btn.connect("clicked", self._on_scan)
         return btn
 
     def populate(self, power_on: bool, devices: List[BtDevice]):
