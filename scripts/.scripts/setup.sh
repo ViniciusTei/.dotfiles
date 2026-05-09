@@ -9,7 +9,15 @@ sudo apt install -y fzf stow xclip ripgrep tmux i3 libx11-dev feh rofi xdotool \
     libcairo2-dev libxcb1-dev libxcb-util0-dev libxcb-randr0-dev libxcb-composite0-dev \
     python3-xcbgen xcb-proto libxcb-image0-dev libxcb-ewmh-dev libxcb-icccm4-dev \
     libxcb-xkb-dev libxcb-xrm-dev libasound2-dev libmpdclient-dev libiw-dev \
-    libcurl4-openssl-dev libpulse-dev libjsoncpp-dev libnl-genl-3-dev libuv1-dev
+    libcurl4-openssl-dev libpulse-dev libjsoncpp-dev libnl-genl-3-dev libuv1-dev \
+    libxcursor-dev libxcb-cursor-dev \
+    bluez pulseaudio pulseaudio-utils pulseaudio-module-bluetooth pavucontrol \
+    dunst libnotify-bin \
+    maim \
+    netcat-traditional \
+    dex xss-lock i3lock \
+    network-manager network-manager-gnome \
+    psmisc
 
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
@@ -37,7 +45,7 @@ tar xzf "$POLYBAR_BUILD_DIR/polybar.tar.gz" -C "$POLYBAR_BUILD_DIR"
 mkdir -p "$POLYBAR_BUILD_DIR/polybar-${POLYBAR_VERSION}/build"
 cmake -S "$POLYBAR_BUILD_DIR/polybar-${POLYBAR_VERSION}" \
       -B "$POLYBAR_BUILD_DIR/polybar-${POLYBAR_VERSION}/build" \
-      -DCMAKE_BUILD_TYPE=Release -DBUILD_DOC=OFF
+      -DCMAKE_BUILD_TYPE=Release -DBUILD_DOC=OFF -DENABLE_XCURSOR=ON
 make -j"$(nproc)" -C "$POLYBAR_BUILD_DIR/polybar-${POLYBAR_VERSION}/build"
 sudo make -C "$POLYBAR_BUILD_DIR/polybar-${POLYBAR_VERSION}/build" install
 rm -rf "$POLYBAR_BUILD_DIR"
