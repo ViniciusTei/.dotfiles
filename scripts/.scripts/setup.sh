@@ -17,7 +17,8 @@ sudo apt install -y fzf stow xclip ripgrep tmux i3 libx11-dev feh rofi xdotool \
     netcat-traditional \
     dex xss-lock i3lock \
     network-manager network-manager-gnome \
-    psmisc
+    psmisc \
+    python3-gi gir1.2-gtk-3.0
 
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
@@ -65,7 +66,7 @@ fi
 curl -LO https://github.com/neovim/neovim/releases/download/v0.11.3/nvim-linux-x86_64.tar.gz
 sudo rm -rf /opt/nvim
 sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
-export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+sudo ln -s /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim
 
 # lazygit install
 LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
@@ -77,6 +78,10 @@ sudo install lazygit /usr/local/bin
 git clone https://github.com/nonpop/xkblayout-state /tmp/xkblayout-state
 sudo make -C /tmp/xkblayout-state
 sudo mv /tmp/xkblayout-state/xkblayout-state /usr/local/bin
+
+# install kitty terminal
+curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+ln -sf ~/.local/kitty.app/bin/kitty ~/.local/kitty.app/bin/kitten ~/.local/bin/
 
 echo "Setting up bash..."
 # Define the lines to append to .bashrc
