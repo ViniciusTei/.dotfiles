@@ -14,7 +14,19 @@ get_devices() {
     [ -z "$line" ] && continue
     mac="${line%% *}"
     name="${line#* }"
-    info=$(bluetoothctl info "$mac" 2>/dev/null)
+    # 1. scan-time cache (most up-to-date for newly discovered devices)
+    if [ -f "${BT_NAME_CACHE:-}" ]; then
+      cached=$(awk -F'\t' -v m="$mac" '$1 == m {print $2; exit}' "$BT_NAME_CACHE")
+      [ -n "$cached" ] && name="$cached"
+    fi
+    # 2. fall back to Name: field from bluetoothctl info
+    if [ "$name" = "${mac//:/-}" ] || [ "$name" = "$mac" ]; then
+      info=$(bluetoothctl info "$mac" 2>/dev/null)
+      resolved=$(printf '%s\n' "$info" | sed -n 's/^\s*Name: //p' | head -1)
+      [ -n "$resolved" ] && name="$resolved"
+    else
+      info=$(bluetoothctl info "$mac" 2>/dev/null)
+    fi
     connected=$(echo "$info" | grep -q "Connected: yes" && echo yes || echo no)
     paired=$(echo "$info"    | grep -q "Paired: yes"    && echo yes || echo no)
     trusted=$(echo "$info"   | grep -q "Trusted: yes"   && echo yes || echo no)
@@ -60,15 +72,23 @@ cmd_connected() {
   get_devices | awk -F'|' '$3 == "yes"'
 }
 
+BT_NAME_CACHE="${TMPDIR:-/tmp}/btctl_names.$$"
+
 cmd_scan() {
   local t=${1:-$SCAN_TIME}
+  : > "$BT_NAME_CACHE"
   (
     printf 'power on\n'
     printf 'scan on\n'
     sleep "$t"
     printf 'scan off\n'
     printf 'exit\n'
-  ) | bluetoothctl >/dev/null 2>&1 || true
+  ) | bluetoothctl 2>/dev/null | while IFS= read -r line; do
+    # capture "[CHG] Device MAC Name: actual name" events
+    if [[ "$line" =~ \[CHG\]\ Device\ ([0-9A-Fa-f:]{17})\ Name:\ (.*) ]]; then
+      printf '%s\t%s\n' "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" >> "$BT_NAME_CACHE"
+    fi
+  done || true
 }
 
 cmd_pair() {

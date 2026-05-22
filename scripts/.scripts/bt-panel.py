@@ -8,18 +8,20 @@ import threading
 from dataclasses import dataclass
 from typing import List
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 # GTK imports (skipped when running under headless unit tests via stub)
 try:
     import gi
     gi.require_version("Gtk", "3.0")
     gi.require_version("Gdk", "3.0")
-    from gi.repository import Gtk, Gdk, GLib, Pango
+    from gi.repository import Gtk, GLib
+    import panel_ui
     _GTK_AVAILABLE = True
 except (ImportError, ValueError):
     _GTK_AVAILABLE = False
 
 BTCTL = os.path.expanduser("~/.scripts/btctl.sh")
-POLYBAR_HEIGHT = 27  # pixels; matches polybar config height
 
 
 @dataclass
@@ -87,249 +89,62 @@ class BtBackend:
         result = self._run("disconnect", mac)
         return result.returncode == 0
 
+    def pair(self, mac: str) -> bool:
+        result = self._run("pair", mac)
+        return result.returncode == 0
+
     def scan_and_list(self) -> List[BtDevice]:
-        self._run("scan", "5")  # best-effort; ignore failure, existing paired devices still listed
-        result = self._run("list", "--paired")
+        self._run("scan", "5")  # best-effort; ignore failure
+        result = self._run("list")  # all devices: paired + newly discovered
         return parse_devices(result.stdout)
 
 
-PANEL_CSS = b"""
-window {
-    background-color: #282a36;
-    border-radius: 6px;
-    border: 1px solid #44475a;
-}
-label {
-    color: #f8f8f2;
-    font-size: 13px;
-}
-label.device-name {
-    font-weight: bold;
-    font-size: 14px;
-}
-label.status-connected {
-    color: #50fa7b;
-}
-label.status-disconnected {
-    color: #6272a4;
-}
-label.badge {
-    background-color: #44475a;
-    color: #f8f8f2;
-    border-radius: 4px;
-    padding: 1px 6px;
-    font-size: 11px;
-}
-label.error {
-    color: #ff5555;
-    font-size: 12px;
-}
-button {
-    background-color: #6272a4;
-    background-image: none;
-    color: #f8f8f2;
-    border: none;
-    border-radius: 4px;
-    padding: 2px 10px;
-    font-size: 12px;
-    box-shadow: none;
-}
-button:hover {
-    background-color: #7c8fbf;
-    background-image: none;
-}
-button.power-on {
-    background-color: #50fa7b;
-    background-image: none;
-    color: #282a36;
-}
-button.power-on:hover {
-    background-color: #69fb8e;
-    background-image: none;
-}
-button.power-off {
-    background-color: #ff5555;
-    background-image: none;
-    color: #f8f8f2;
-}
-button.power-off:hover {
-    background-color: #ff6e6e;
-    background-image: none;
-}
-button.scan {
-    background-color: #6272a4;
-    background-image: none;
-    color: #f8f8f2;
-}
-button.scan:disabled {
-    background-color: #44475a;
-    background-image: none;
-    color: #6272a4;
-}
-separator {
-    background-color: #44475a;
-    min-height: 1px;
-}
-"""
-
-
-def apply_css():
-    provider = Gtk.CssProvider()
-    provider.load_from_data(PANEL_CSS)
-    Gtk.StyleContext.add_provider_for_screen(
-        Gdk.Screen.get_default(),
-        provider,
-        Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
-    )
-
-
-def get_mouse_position():
-    """Return (x, y) of current mouse cursor using xdotool."""
-    result = subprocess.run(
-        ["xdotool", "getmouselocation", "--shell"],
-        capture_output=True, text=True
-    )
-    pos = {}
-    for line in result.stdout.splitlines():
-        if "=" in line:
-            k, v = line.split("=", 1)
-            pos[k.strip()] = int(v.strip())
-    return pos.get("X", 0), pos.get("Y", 0)
-
-
-class BtPanel(Gtk.Window):
+class BtPanel(panel_ui.BasePanelWindow):
     def __init__(self, backend: BtBackend):
         super().__init__()
         self._backend = backend
-        self._mouse_x, _ = get_mouse_position()
-
-        # Window chrome
-        self.set_decorated(False)
-        self.set_type_hint(Gdk.WindowTypeHint.POPUP_MENU)
-        self.set_keep_above(True)
-        self.set_resizable(False)
-        self.set_border_width(8)
-        self._positioned = False
-
-        # Auto-dismiss on focus loss
-        self.connect("focus-out-event", lambda *_: Gtk.main_quit())
-
-        # Position after GTK calculates window size
-        self.connect("size-allocate", self._on_size_allocate)
-
-        # Root container
-        self._root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
-        self._root.set_margin_top(4)
-        self._root.set_margin_bottom(4)
-        self.add(self._root)
-
-    def _on_size_allocate(self, widget, allocation):
-        if self._positioned:
-            return
-        screen = Gdk.Screen.get_default()
-        screen_height = screen.get_height()
-        x = self._mouse_x - allocation.width // 2
-        y = screen_height - POLYBAR_HEIGHT - allocation.height
-        # Keep panel on-screen horizontally
-        x = max(0, min(x, screen.get_width() - allocation.width))
-        self.move(x, y)
-        self._positioned = True
-
-    def build_header(self, power_on: bool) -> Gtk.Box:
-        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
-        hbox.set_margin_start(4)
-        hbox.set_margin_end(4)
-
-        icon = Gtk.Label(label="󰂯")
-        title = Gtk.Label(label="Bluetooth")
-        hbox.pack_start(icon, False, False, 0)
-        hbox.pack_start(title, False, False, 0)
-
-        btn = Gtk.Button(label="ON" if power_on else "OFF")
-        btn.get_style_context().add_class("power-on" if power_on else "power-off")
-        btn.connect("clicked", self._on_power_toggle)
-        hbox.pack_end(btn, False, False, 0)
-
-        return hbox
-
-    def build_separator(self) -> Gtk.Separator:
-        return Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
-
-    def build_device_row(self, device: BtDevice) -> Gtk.Box:
-        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-        vbox.set_margin_start(4)
-        vbox.set_margin_end(4)
-
-        # Line 1: device name
-        name_label = Gtk.Label(label=device.name, xalign=0)
-        name_label.get_style_context().add_class("device-name")
-        vbox.pack_start(name_label, False, False, 0)
-
-        # Line 2: status dot + badges
-        status_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
-        dot = "●" if device.connected else "○"
-        status_text = "Connected" if device.connected else "Disconnected"
-        status_label = Gtk.Label(label=f"{dot} {status_text}", xalign=0)
-        css_class = "status-connected" if device.connected else "status-disconnected"
-        status_label.get_style_context().add_class(css_class)
-        status_hbox.pack_start(status_label, False, False, 0)
-
-        if device.paired:
-            badge = Gtk.Label(label="Paired")
-            badge.get_style_context().add_class("badge")
-            status_hbox.pack_start(badge, False, False, 0)
-        if device.trusted:
-            badge = Gtk.Label(label="Trusted")
-            badge.get_style_context().add_class("badge")
-            status_hbox.pack_start(badge, False, False, 0)
-
-        vbox.pack_start(status_hbox, False, False, 0)
-
-        # Line 3: action button (right-aligned) + error label (hidden by default)
-        action_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
-        error_label = Gtk.Label(label="", xalign=0)
-        error_label.get_style_context().add_class("error")
-        error_label.set_no_show_all(True)
-
-        if device.connected:
-            btn = Gtk.Button(label="Disconnect")
-            btn.connect("clicked", self._on_disconnect, device.mac, error_label)
-        else:
-            btn = Gtk.Button(label="Connect")
-            btn.connect("clicked", self._on_connect, device.mac, error_label)
-
-        action_hbox.pack_end(btn, False, False, 0)
-        vbox.pack_start(action_hbox, False, False, 0)
-        vbox.pack_start(error_label, False, False, 0)
-
-        return vbox
-
-    def build_footer(self) -> Gtk.Button:
-        btn = Gtk.Button(label="Scan for devices")
-        btn.get_style_context().add_class("scan")
-        btn.set_halign(Gtk.Align.CENTER)
-        btn.connect("clicked", self._on_scan)
-        return btn
 
     def populate(self, power_on: bool, devices: List[BtDevice]):
-        # Clear existing children
-        for child in self._root.get_children():
-            self._root.remove(child)
-
-        self._root.pack_start(self.build_header(power_on), False, False, 0)
+        widgets = [panel_ui.build_header("󰂯", "Bluetooth", power_on, self._on_power_toggle)]
 
         if power_on:
             for device in devices:
-                self._root.pack_start(self.build_separator(), False, False, 4)
-                self._root.pack_start(self.build_device_row(device), False, False, 0)
+                badges = []
+                if device.paired:
+                    badges.append("Paired")
+                if device.trusted:
+                    badges.append("Trusted")
 
-            self._root.pack_start(self.build_separator(), False, False, 4)
-            self._root.pack_start(self.build_footer(), False, False, 0)
+                dot = "●" if device.connected else "○"
+                status_text = f"{dot} {'Connected' if device.connected else 'Disconnected'}"
 
-        self._root.show_all()
+                if device.connected:
+                    action_label = "Disconnect"
+                    on_action = lambda b, e, mac=device.mac: self._on_disconnect(b, mac, e)
+                elif not device.paired:
+                    action_label = "Pair"
+                    on_action = lambda b, e, mac=device.mac: self._on_pair(b, mac, e)
+                else:
+                    action_label = "Connect"
+                    on_action = lambda b, e, mac=device.mac: self._on_connect(b, mac, e)
 
-    # ── Action handlers (implemented in Task 3) ───────────────────────────
-    def _on_power_toggle(self, button: Gtk.Button):
+                widgets.append(panel_ui.build_separator())
+                widgets.append(panel_ui.build_row(
+                    name=device.name,
+                    status_text=status_text,
+                    is_connected=device.connected,
+                    badges=badges,
+                    action_label=action_label,
+                    on_action=on_action,
+                ))
+
+            widgets.append(panel_ui.build_separator())
+            widgets.append(panel_ui.build_footer_button("Scan for devices", self._on_scan))
+
+        self._refresh_root(*widgets)
+
+    # ── Action handlers ───────────────────────────────────────────────────────
+    def _on_power_toggle(self, button: "Gtk.Button"):
         is_on = button.get_label() == "ON"
         button.set_sensitive(False)
         button.set_label("…")
@@ -337,7 +152,7 @@ class BtPanel(Gtk.Window):
         def _do():
             try:
                 ok = self._backend.set_power(not is_on)
-            except Exception as exc:
+            except Exception:
                 button.set_label("ON" if is_on else "OFF")
                 button.set_sensitive(True)
                 return False
@@ -352,7 +167,7 @@ class BtPanel(Gtk.Window):
 
         GLib.idle_add(_do)
 
-    def _on_connect(self, button: Gtk.Button, mac: str, err_label: Gtk.Label):
+    def _on_connect(self, button: "Gtk.Button", mac: str, err_label: "Gtk.Label"):
         button.set_sensitive(False)
         button.set_label("…")
         err_label.set_text("")
@@ -380,7 +195,35 @@ class BtPanel(Gtk.Window):
 
         GLib.idle_add(_do)
 
-    def _on_disconnect(self, button: Gtk.Button, mac: str, err_label: Gtk.Label):
+    def _on_pair(self, button: "Gtk.Button", mac: str, err_label: "Gtk.Label"):
+        button.set_sensitive(False)
+        button.set_label("…")
+        err_label.set_text("")
+        err_label.hide()
+
+        def _do():
+            try:
+                ok = self._backend.pair(mac)
+            except Exception as exc:
+                button.set_label("Pair")
+                button.set_sensitive(True)
+                err_label.set_text(f"Error: {exc}")
+                err_label.show()
+                return False
+            if ok:
+                power_on = self._backend.power_status()
+                devices = self._backend.list_paired()
+                self.populate(power_on, devices)
+            else:
+                button.set_label("Pair")
+                button.set_sensitive(True)
+                err_label.set_text("Pair failed")
+                err_label.show()
+            return False
+
+        GLib.idle_add(_do)
+
+    def _on_disconnect(self, button: "Gtk.Button", mac: str, err_label: "Gtk.Label"):
         button.set_sensitive(False)
         button.set_label("…")
         err_label.set_text("")
@@ -408,7 +251,7 @@ class BtPanel(Gtk.Window):
 
         GLib.idle_add(_do)
 
-    def _on_scan(self, button: Gtk.Button):
+    def _on_scan(self, button: "Gtk.Button"):
         button.set_sensitive(False)
         button.set_label("Scanning…")
 
@@ -432,7 +275,7 @@ def main():
         print("Error: python3-gi / GTK3 not available. Install python3-gi.", file=sys.stderr)
         sys.exit(1)
 
-    apply_css()
+    panel_ui.apply_css()
 
     backend = BtBackend()
     panel = BtPanel(backend)
