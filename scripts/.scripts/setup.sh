@@ -91,8 +91,10 @@ if [ -f ~/.scripts/startup.sh ]; then
     . ~/.scripts/startup.sh
 fi"
 
-# Append the lines to .bashrc
-echo "$lines_to_append" >> ~/.bashrc
+# Append the lines to .bashrc once
+if ! grep -Fq '# Startup tmux session on bash login' ~/.bashrc; then
+    echo "$lines_to_append" >> ~/.bashrc
+fi
 
 source ~/.scripts/bash.sh
 source ~/.bashrc
