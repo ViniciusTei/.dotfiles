@@ -4,7 +4,7 @@ echo "Setting up development tools..."
 
 echo "Installing dependencies..."
 sudo apt update
-sudo apt install -y fzf stow xclip ripgrep tmux i3 libx11-dev feh rofi xdotool \
+sudo apt install -y jq fzf stow xclip ripgrep tmux i3 libx11-dev feh rofi xdotool \
     build-essential cmake cmake-data pkg-config python3 python3-sphinx \
     libcairo2-dev libxcb1-dev libxcb-util0-dev libxcb-randr0-dev libxcb-composite0-dev \
     python3-xcbgen xcb-proto libxcb-image0-dev libxcb-ewmh-dev libxcb-icccm4-dev \
@@ -99,8 +99,10 @@ if [ -f ~/.scripts/startup.sh ]; then
     . ~/.scripts/startup.sh
 fi"
 
-# Append the lines to .bashrc
-echo "$lines_to_append" >> ~/.bashrc
+# Append the lines to .bashrc once
+if ! grep -Fq '# Startup tmux session on bash login' ~/.bashrc; then
+    echo "$lines_to_append" >> ~/.bashrc
+fi
 
 source ~/.scripts/bash.sh
 source ~/.bashrc

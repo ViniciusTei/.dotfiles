@@ -1,5 +1,5 @@
 #! /bin/bash
 
-if ! [ "$TERM_PROGRAM" = tmux ]; then
-  tmux new-session -A -s vinicius 
+if [ -z "$TMUX" ] && [ -z "$SSH_CONNECTION" ]; then
+  tmux new-session -A -s vinicius
 fi
