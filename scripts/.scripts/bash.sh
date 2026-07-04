@@ -38,27 +38,10 @@ get_branch_name() {
 
 # Função para atualizar o prompt (PS1)
 better_prompt() {
-
     local current_dir="\e[1;40;m\w "  # Blue color for the current directory
     local git_branch="\[\e[1;36m\]\$(get_branch_name)\e\[\e[m\]"        # Get the Git branch name
     local prompt="$current_dir$git_branch \n"  # current_dir(branch)$
     PS1="$prompt "
-}
-
-# Funcao para adicionar suggestoes para o comando cd
-better_cd() {
-  cd $1
-  if [ -z $1 ] 
-  then 
-    select="$(ls -a $pwd | fzf --height 40% --reverse)"
-    if [[ -d "$select" ]] 
-    then
-      cd "$select"
-    elif [[ -f "$select" ]] 
-    then
-      nvim "$select"
-    fi
-  fi
 }
 
 # Execute a função update_prompt sempre que você mudar de diretório
@@ -67,7 +50,4 @@ cd() {
     better_prompt
 }
 
-
-# Execute ao iniciar o shell
-alias cd="better_cd"
 better_prompt
