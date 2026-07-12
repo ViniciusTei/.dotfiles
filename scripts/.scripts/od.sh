@@ -64,4 +64,3 @@ od() {
     [[ -n "$dir" ]] && cd "$HOME/$dir"
 }
 
-od

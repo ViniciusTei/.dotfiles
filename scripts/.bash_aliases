@@ -4,7 +4,7 @@
 . ~/.scripts/bash.sh
 
 # cd to projects folder with fuzzy finder
-alias od="~/.scripts/od.sh"
+source ~/.scripts/od.sh
 
 # nvim open project aliases
 alias nd='nvim $(find ~/Document{,os} -maxdepth 2 -type d 2>/dev/null | fzf --height 40% --layout=reverse --border)'
