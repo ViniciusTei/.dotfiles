@@ -4,10 +4,10 @@
 . ~/.scripts/bash.sh
 
 # cd to projects folder with fuzzy finder
-alias od='cd $(find ~/ -maxdepth 4 -type d -not -path "*/.*" | fzf --height 40% --layout=reverse --border)'
+source ~/.scripts/od.sh
 
 # nvim open project aliases
-alias nd='nvim $(find ~/Documents/www -maxdepth 2 -type d | fzf --height 40% --layout=reverse --border)'
+alias nd='nvim $(find ~/Document{,os} -maxdepth 2 -type d 2>/dev/null | fzf --height 40% --layout=reverse --border)'
 alias n=nvim
 
 # work developments
